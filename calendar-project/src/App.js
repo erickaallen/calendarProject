@@ -1,14 +1,30 @@
 import React, { Component } from 'react';
-import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
-// import PropTypes from 'prop-types';
+import { FormGroup, ControlLabel, FormControl, Table, TableProps } from 'react-bootstrap';
 import logo from './logo.svg';
 import './App.css';
+import Calendar from './Calendar';
+
+export const Months = {
+  "01": {"Name": "January", "Days": 31},
+  "02": {"Name": "February", "Days": 28},
+  "03": {"Name": "March", "Days": 31},
+  "04": {"Name": "April", "Days": 30},
+  "05": {"Name": "May", "Days": 31},
+  "06": {"Name": "June", "Days": 30},
+  "07": {"Name": "July", "Days": 31},
+  "08": {"Name": "August", "Days": 31},
+  "09": {"Name": "September", "Days": 30},
+  "10": {"Name": "October", "Days": 31},
+  "11": {"Name": "November", "Days": 30},
+  "12": {"Name": "December", "Days": 31}
+}
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.getFormattedDate = this.getFormattedDate.bind(this);
+    this.calculateEndDate = this.calculateEndDate.bind(this);
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     this.handleNumberOfDaysChange = this.handleNumberOfDaysChange.bind(this);
     this.handleCountryCodeChange = this.handleCountryCodeChange.bind(this);
@@ -34,6 +50,13 @@ class App extends Component {
     let formattedDate = year + "-" + month + "-" + date;
     console.log(formattedDate);
     return formattedDate;
+  }
+
+  calculateEndDate() {
+    let rawDate = new Date();
+    let endDate = new Date(rawDate.setTime( rawDate.getTime() + this.state.numberDays * 86400000 ));
+    console.log(endDate);
+    return endDate;
   }
 
   handleStartDateChange(event) {
@@ -62,10 +85,10 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Event Calendar</h1>
         </header>
-        <form className="">
-          <FormGroup>
+        <form className="form">
+          <FormGroup className="form-group">
             <ControlLabel>Start Date</ControlLabel>
             <FormControl 
               type="date"
@@ -73,7 +96,7 @@ class App extends Component {
               onChange={this.handleStartDateChange}
             />
           </FormGroup>
-          <FormGroup>
+          <FormGroup className="form-group">
             <ControlLabel>Number of Days</ControlLabel>
             <FormControl 
               type="number" 
@@ -81,7 +104,7 @@ class App extends Component {
               onChange={this.handleNumberOfDaysChange}
             />
           </FormGroup>
-          <FormGroup>
+          <FormGroup className="form-group">
             <ControlLabel>Country Code</ControlLabel>
             <FormControl 
               type="text" 
@@ -90,7 +113,12 @@ class App extends Component {
               onChange={this.handleCountryCodeChange}
             />
           </FormGroup>
+          <FormGroup>
+            <ControlLabel>End Date:</ControlLabel>
+            <FormControl type="text" value={this.calculateEndDate()} readOnly />
+        </FormGroup>
         </form>
+        <Calendar />
       </div>
     );
   }
